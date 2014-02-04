@@ -1,0 +1,42 @@
+# 
+
+THIS FILE MUST BE SAVED AS settings.py
+
+# DO NOT ABUSE THIS AND SPAM
+
+#Add your App keys below here
+AppID = 'add ID'
+ApiKey = 'add KEY'
+
+BOT_NAME = 'mad_bot'
+
+SPIDER_MODULES = ['mad_bot.spiders']
+
+NEWSPIDER_MODULE = 'mad_bot.spiders'
+
+ITEM_PIPELINES = {
+	'mad_bot.pipelines.Duplicates': 100,
+	'mad_bot.pipelines.CLPipe': 500,
+}
+
+#~gofastandbreakthings~zuck
+# some sane ?? limits by default (override if needed, OOPS..lolz)
+#CLOSESPIDER_PAGECOUNT = 1000
+#CLOSESPIDER_TIMEOUT = 3600
+
+RETRY_ENABLED = False
+COOKIES_ENABLED = False
+
+DOWNLOADER_MIDDLEWARES = {
+    'mad_bot.middleware.RandomUserAgent': 1,
+    'mad_bot.middleware.ErrorMonkeyMiddleware': 2,
+    'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware': 3,
+    'mad_bot.middleware.ProxyMiddleware': 4,
+}
+
+USER_AGENTS = ["ADD USER AGENTS HERE"]
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
