@@ -1,6 +1,6 @@
 This works with Python 2.7.6 and since Heroku defaults to this version there is no runtime.txt to declare a version. There is also no Procfile because this only installs the program on Heroku and makes it availabe from the command line. 
 
-I'm using this to scrap emails and reply to them. I'm not a spammer and you should NOT CLONE THIS if you intent to use it for spam. I simply want to show potential employers that I can reach out to them automatically. 
+I'm using this to scrap emails and reply to them one time. I'm not a spammer and you should NOT CLONE THIS if you intent to use it for spam. I simply want to show potential employers that I can reach out to them automatically. 
 
 I ~~m trying to get~~ got this working on Heroku and found this https://github.com/thnkr/cloak. It's a really cool tool and I'll adapt what I learned from it in later work, unfortunately it doesn't work for this use-case. ~~Hunting for~~ Found the answer. :)
 
@@ -14,18 +14,31 @@ Some quick commands:
   heroku logs --tail 
 
   ```
-  Run any scraper manually; launches a streaming log view too
+  Run any scraper manually; Can also be used to initialize Heroku Schedulers
 
   ```
-  heroku run scrapy crawl [crawler_name]
+  heroku run scrapy crawl [crawler_name] -a city=? -a url=? -a sec=?
 
   ```
 
-To deploy jobs using the Heroky Scheduler, simply create a job by entering: $ scray crawl [crawler_name] then set times and save
+You will need to have a place to store whatever you scrape.
+I used Parse.com for this project and it's working great. 
+The main issue with Parse is that they bill by API request. 
 
-If you want to reuse the storage method I used here, you will need to create an app on Parse.com and add your API keys in the settings.py file
+In the pipelines I'm sending a JSON blob to Parse when a scrape completes and 
+processing the data while I save it and set it for a job to pickup later that 
+sends out an email if one has never been sent before. If it has, it's skipped. 
 
-Finally, if you choose Parse, you'll need to create cloud functions like below, or just copy and reuse these :)
+
+The following is NOT EFFICIENT, but it will give you an idea 
+of where you need to start. The code below was used during development to get 
+this working. If you want to use this code, change the pipelines.py file. Use 
+what is commented out and comment out the current code. This will make the code 
+below work, but look at your API requets after a day. Mine hit 400K. YIKES :(
+
+I'm sailing under 10K a day running 24/7 now!!! Figure out how yourself... lol
+
+
   ```
   var Scrape = Parse.Object.extend("Scrape");
   Parse.Cloud.beforeSave("Scrape", function(request, response) {
