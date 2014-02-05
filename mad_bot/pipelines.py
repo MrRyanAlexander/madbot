@@ -75,3 +75,19 @@ class Duplicates(object):
         else:
             self.ids_seen.add(item['id'])
             return item
+#writing Python is fun
+class FilterWordsPipeline(object):
+    """A pipeline for filtering out items which contain certain words in their
+    description"""
+
+    # put all words in lowercase
+    # can use any words here to check ads 
+    words_to_filter = ['politics', 'religion']
+
+    def process_item(self, item, spider):
+        for word in self.words_to_filter:
+            #need to fix scraper for this to work, but will work once fixed :)
+            if word in unicode(item['description']).lower():
+                raise DropItem("Contains forbidden word: %s" % word)
+        else:
+            return item
