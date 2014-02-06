@@ -37,5 +37,5 @@ class ErrorMonkeyMiddleware(object):
 class ProxyMiddleware(object):
     def process_request(self, request, spider):
         #change ip:port for new proxy
-        request.meta['proxy'] = "http://221.10.102.203:83"
+        request.meta['proxy'] = "http://58.22.28.131:82"
         print (request.meta['proxy'])
