@@ -11,7 +11,6 @@ class MySpider(CrawlSpider):
     name = "madbot"
 
     def __init__(self, name=None, *args, **kwargs):
-        
 
         self.allowed_domains = ['%s' % kwargs.get('url')]
         self.start_urls = ['http://%s.%s/%s/' % (kwargs.get('city'), kwargs.get('url'), kwargs.get('sec'))]
