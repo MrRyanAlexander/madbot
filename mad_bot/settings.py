@@ -12,24 +12,47 @@ SPIDER_MODULES = ['mad_bot.spiders']
 NEWSPIDER_MODULE = 'mad_bot.spiders'
 
 ITEM_PIPELINES = {
-	'mad_bot.pipelines.Duplicates': 100,
-	'mad_bot.pipelines.CLPipe': 500,
+    #'mad_bot.pipelines.DropAds': 200,
+	'mad_bot.pipelines.Duplicates': 300,
+	'mad_bot.pipelines.CLPipe': 100,
 }
 
-#~gofastandbreakthings~zuck
-# some sane ?? limits by default (override if needed, OOPS..lolz)
+#DOWNLOAD_DELAY = .05
+DOWNLOAD_TIMEOUT = 15
+
+CONCURRENT_ITEMS = 4
+CONCURRENT_REQUESTS = 4
+
+#AUTOTHROTTLE_ENABLED = True
+#AUTOTHROTTLE_DEBUG = True
+#AUTOTHROTTLE_MAX_DELY = 15.0
+
 #CLOSESPIDER_PAGECOUNT = 1000
 #CLOSESPIDER_TIMEOUT = 3600
 
-RETRY_ENABLED = False
+RETRY_ENABLED = True
+RETRY_TIMES = 5
+RETRY_HTTP_CODES = [400, 403, 404, 408]
+
 COOKIES_ENABLED = False
 
 DOWNLOADER_MIDDLEWARES = {
+    'scrapy.contrib.downloadermiddleware.retry.RetryMiddleware':4,
+    'mad_bot.middleware.RandomProxy':5,
+    'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware': 3,
+
     'mad_bot.middleware.RandomUserAgent': 1,
     'mad_bot.middleware.ErrorMonkeyMiddleware': 2,
-    'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware': 3,
-    'mad_bot.middleware.ProxyMiddleware': 4,
+    #'mad_bot.middleware.ProxyMiddleware': 4,
+
+
+    #'mad_bot.middleware.RandomUserAgent': 1,
+    #'mad_bot.middleware.ErrorMonkeyMiddleware': 2,
+    #'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware': 3,
+    #'mad_bot.middleware.ProxyMiddleware': 4,
 }
+
+PROXY_LIST = 'proxies.txt'
 
 USER_AGENTS = [
     "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; AcooBrowser; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",

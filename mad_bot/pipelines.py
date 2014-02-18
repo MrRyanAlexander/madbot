@@ -1,8 +1,10 @@
 # mad_bot scrapper | version 0.1
 # DO NOT ABUSE THIS AND SPAM
+import re
 import json,httplib
-from pprint import pprint
+import string
 from scrapy import signals
+from scrapy import log
 #scrapy docs say use LinesExporter, but I want a JSON array
 #from scrapy.contrib.exporter import JsonLinesItemExporter
 from scrapy.contrib.exporter import JsonItemExporter
@@ -36,7 +38,9 @@ class CLPipe(object):
         #reopen new static/dynamic file to parse for sending
         new = open('%s_items.json' % spider.name)
         data = json.load(new)
-        #for i in range(len(data)):
+        #reg = re.compile(r'[\n\r\t]')
+        #for i in data:
+        #    log.msg( i )
             #this is actually very bad to loop here
             #in one day I sent almost 500k requests.. thats bad
             #try sending one load and process on the other end. 
@@ -48,7 +52,7 @@ class CLPipe(object):
         connection = httplib.HTTPSConnection('api.parse.com', 443)
         connection.connect()
         connection.request('POST', '/1/functions/scrapeSaver', json.dumps({
-            #"email":data[i]["email"], "referer":data[i]["referer"], "scrapeID":data[i]["id"]
+        #    #"email":data[i]["email"], "referer":data[i]["referer"], "scrapeID":data[i]["id"]
             "data":data
         }), {
             "X-Parse-Application-Id": AppID,
@@ -64,30 +68,34 @@ class CLPipe(object):
         self.exporter.export_item(item)
         return item
 
+#drop items without email adress
+
+
 class Duplicates(object):
 
     def __init__(self):
-        self.ids_seen = set()
+        self.emails_seen = set()
 
     def process_item(self, item, spider):
-        if item['id'] in self.ids_seen:
-            raise DropItem("Duplicate item found: %s" % item)
+        if item['email'] in self.emails_seen:
+            raise DropItem("\n\n\n\n\n\n\n\n\n\n\n\nDuplicate email found: %s \n\n\n\n\n\n\n\n\n\n\n\n" % item)
         else:
-            self.ids_seen.add(item['id'])
+            self.emails_seen.add(item['email'])
             return item
-#writing Python is fun
-class FilterWordsPipeline(object):
-    """A pipeline for filtering out items which contain certain words in their
-    description"""
+
+class DropAds(object):
+    """A pipeline to restrict results to specific details"""
 
     # put all words in lowercase
     # can use any words here to check ads 
-    words_to_filter = ['politics', 'religion']
+    words_to_filter = ['python', 'programmer', 'engineer']
 
     def process_item(self, item, spider):
         for word in self.words_to_filter:
             #need to fix scraper for this to work, but will work once fixed :)
             if word in unicode(item['description']).lower():
-                raise DropItem("Contains forbidden word: %s" % word)
+            #    raise DropItem("Invalid Ad")
+                log.msg("\n\n\n\n\n\n\n\n\n\n\n\nFound the word '%s' in the description!!!!\n\n\n\n\n\n\n\n\n\n\n\n" % word)
+                return item
         else:
             return item

@@ -2,7 +2,7 @@
 # DO NOT ABUSE THIS AND SPAM
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.selector import HtmlXPathSelector
+from scrapy.selector import Selector
 from scrapy.http import Request
 from mad_bot.items import CL
 import re
@@ -23,7 +23,11 @@ class MySpider(CrawlSpider):
         super(MySpider, self).__init__(name, *args, **kwargs)
 
     def parse_reply_data(self, response):
-        hxs = HtmlXPathSelector(response)
+        hxs = Selector(response)
+
+        #if response.status == 403:
+        #    return Request(url=response.url, dont_filter=True)
+
         posts = hxs.xpath('//div[@class="reply_options"]')
         ads = []
         for post in posts:
