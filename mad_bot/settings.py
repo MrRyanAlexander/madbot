@@ -1,10 +1,6 @@
 # mad_bot scrapper | version 0.1
 # DO NOT ABUSE THIS AND SPAM
 
-#Add your App keys below here
-AppID = 'WlvkspXVtfLbKQrRLcOOIpnqkOKCDkaK5e21OaFt'
-ApiKey = 'AX3WNA7mqkHMmdOZfnb88QTYjsKaF3JDYCwu8csZ'
-
 BOT_NAME = 'mad_bot'
 
 SPIDER_MODULES = ['mad_bot.spiders']
@@ -12,7 +8,7 @@ SPIDER_MODULES = ['mad_bot.spiders']
 NEWSPIDER_MODULE = 'mad_bot.spiders'
 
 ITEM_PIPELINES = {
-    #'mad_bot.pipelines.DropAds': 200,
+    'mad_bot.pipelines.DropAds': 200,
 	'mad_bot.pipelines.Duplicates': 300,
 	'mad_bot.pipelines.CLPipe': 100,
 }

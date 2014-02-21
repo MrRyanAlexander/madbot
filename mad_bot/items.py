@@ -3,7 +3,7 @@
 from scrapy.item import Item, Field
 
 class CL(Item):
-	#title = Field()
+	title = Field()
 	#description = Field()
 	referer = Field()
 	email = Field()

@@ -6,7 +6,6 @@ import base64
 from scrapy import log
 from scrapy.exceptions import IgnoreRequest
 
-
 class RandomProxy(object):
     def __init__(self, settings):
         self.proxy_list = settings.get('PROXY_LIST')
@@ -25,6 +24,9 @@ class RandomProxy(object):
 
     @classmethod
     def from_crawler(cls, crawler):
+        settings = crawler.settings
+        log.msg('AppID: %s' % settings['AppID'])
+        log.msg('ApiKey: %s' % settings['ApiKey'])
         return cls(crawler.settings)
 
     def process_request(self, request, spider):

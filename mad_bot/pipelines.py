@@ -9,13 +9,14 @@ from scrapy import log
 #from scrapy.contrib.exporter import JsonLinesItemExporter
 from scrapy.contrib.exporter import JsonItemExporter
 from scrapy.exceptions import DropItem
-from mad_bot.settings import AppID
-from mad_bot.settings import ApiKey
 
 class CLPipe(object):
     """A pipeline for writing results to json"""
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.files = {}
+        self.AppID = kwargs.get('AppID')
+        self.ApiKey = kwargs.get('ApiKey')
+        super(CLPipe, self).__init__(**kwargs)
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -55,8 +56,8 @@ class CLPipe(object):
         #    #"email":data[i]["email"], "referer":data[i]["referer"], "scrapeID":data[i]["id"]
             "data":data
         }), {
-            "X-Parse-Application-Id": AppID,
-            "X-Parse-REST-API-Key": ApiKey,
+            "X-Parse-Application-Id": self.AppID,
+            "X-Parse-REST-API-Key": self.ApiKey,
             "Content-Type": "application/json"
         })
         result = json.loads(connection.getresponse().read())
@@ -88,14 +89,14 @@ class DropAds(object):
 
     # put all words in lowercase
     # can use any words here to check ads 
-    words_to_filter = ['python', 'programmer', 'engineer']
+    words_to_filter = ['craigslist is hiring']
 
     def process_item(self, item, spider):
         for word in self.words_to_filter:
             #need to fix scraper for this to work, but will work once fixed :)
-            if word in unicode(item['description']).lower():
-            #    raise DropItem("Invalid Ad")
-                log.msg("\n\n\n\n\n\n\n\n\n\n\n\nFound the word '%s' in the description!!!!\n\n\n\n\n\n\n\n\n\n\n\n" % word)
+            if word in unicode(item['title']).lower():
+                raise DropItem("Invalid Ad")
+                #log.msg("\n\n\n\n\n\n\n\n\n\n\n\nFound the word '%s' in the description!!!!\n\n\n\n\n\n\n\n\n\n\n\n" % word)
+                #return item
+            else:
                 return item
-        else:
-            return item

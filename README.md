@@ -1,10 +1,6 @@
 This works with Python 2.7.6 and since Heroku defaults to this version there is no runtime.txt to declare a version. There is also no Procfile because this only installs the program on Heroku and makes it availabe from the command line. 
 
-I'm using this to scrap emails and reply to them one time. I'm not a spammer and you should NOT CLONE THIS if you intent to use it for spam. I simply want to show potential employers that I can reach out to them automatically. 
-
 I ~~m trying to get~~ got this working on Heroku and found this https://github.com/thnkr/cloak. It's a really cool tool and I'll adapt what I learned from it in later work, unfortunately it doesn't work for this use-case. ~~Hunting for~~ Found the answer. :)
-
-Refer to [middleware.py](https://github.com/MrRyanAlexander/Mad_Bot/blob/master/mad_bot/middleware.py "Middleware.PY") for changing the proxy.
 
 Some quick commands:
 
@@ -17,8 +13,9 @@ Some quick commands:
   Run any scraper manually; Can also be used to initialize Heroku Schedulers
 
   ```
-  heroku run scrapy crawl [crawler_name] -a city=? -a url=? -a sec=?
+  heroku run scrapy crawl [crawler_name] -a city=? -a url=? -a sec=? -s AppId='INSERT ID HERE' -s ApiKey='INSERT KEY HERE'
 
+  Note: If not on Heroku, drop heroku run.
   ```
 
 You will need to have a place to store whatever you scrape.
